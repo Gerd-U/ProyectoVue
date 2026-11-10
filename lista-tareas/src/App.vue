@@ -1,47 +1,27 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref } from "vue";
+
+const nuevaTarea = ref("");
+const tareas = ref([]);
+let siguienteId = 1;
+
+function agregarTarea() {
+  const texto = nuevaTarea.value.trim();
+  if (texto === "") return;
+  tareas.value.push({ id: siguienteId++, texto, completa: false });
+  nuevaTarea.value = "";
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <h1>Mis Tareas</h1>
+  <form @submit.prevent="agregarTarea">
+    <input v-model="nuevaTarea" placeholder="Escribe una tarea" />
+    <button>Agregar</button>
+  </form>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
-
-  <main>
-    <TheWelcome />
-  </main>
+  <p v-if="tareas.length === 0">No hay tareas todavía</p>
+  <ul>
+    <li v-for="tarea in tareas" :key="tarea.id"> {{ tarea.texto }}</li>
+  </ul>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
